@@ -1,9 +1,11 @@
+{% set currentCategory = app.request.query.get('category') %}
+
 {% if pageCount > 1 %}
     <nav>
         <ul class="pagination justify-content-center">
             {% if previous is defined %}
                 <li class="page-item">
-                    <a class="page-link" href="{{ path('app_home', { page: previous }) }}" aria-label="Previous">
+                    <a class="page-link" href="{{ path('app_home', { page: previous, category: currentCategory }) }}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
@@ -15,7 +17,7 @@
             
             {# Always show the first page #}
             <li class="page-item{% if current == 1 %} active{% endif %}">
-                <a class="page-link" href="{{ path('app_home', { page: 1 }) }}">1</a>
+                <a class="page-link" href="{{ path('app_home', { page: 1, category: currentCategory }) }}">1</a>
             </li>
 
             {# Ellipsis after the first page if needed #}
@@ -30,7 +32,7 @@
                 {% set page = current + offset %}
                 {% if page > 1 and page < pageCount %}
                     <li class="page-item{% if page == current %} active{% endif %}">
-                        <a class="page-link" href="{{ path('app_home', { page: page }) }}">{{ page }}</a>
+                        <a class="page-link" href="{{ path('app_home', { page: page, category: currentCategory }) }}">{{ page }}</a>
                     </li>
                 {% endif %}
             {% endfor %}
@@ -44,12 +46,12 @@
 
             {# Always show the last page #}
             <li class="page-item{% if current == pageCount %} active{% endif %}">
-                <a class="page-link" href="{{ path('app_home', { page: pageCount }) }}">{{ pageCount }}</a>
+                <a class="page-link" href="{{ path('app_home', { page: pageCount, category: currentCategory }) }}">{{ pageCount }}</a>
             </li>
 
             {% if next is defined %}
                 <li class="page-item">
-                    <a class="page-link" href="{{ path('app_home', { page: next }) }}" aria-label="Next">
+                    <a class="page-link" href="{{ path('app_home', { page: next, category: currentCategory }) }}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

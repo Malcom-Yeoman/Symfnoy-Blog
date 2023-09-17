@@ -8,7 +8,6 @@
             <!-- Blog -->
             <div class="col-md-8">
                 <h2>Posts</h2>
-                
                 {% for post in posts %}
                 <div class="card mb-4">
                     <div class="card-body">
@@ -34,13 +33,15 @@
                     <div class="card-body">
                         <h5 class="card-title">Catégories</h5>
                         <ul class="list-group list-group-flush">
+                        {% if categories|length > 0 %}
                             {% for category in categories %}
-                            <li class="list-group-item">
-                                <a href="#">{{ category.name }}</a>
-                            </li>
-                            {% else %}
-                            <li class="list-group-item">Aucune catégorie disponible.</li>
+                                <li class="list-group-item">
+                                    <a href="{{ path('app_home', {'category': category.id}) }}">{{ category.name }}</a>
+                                </li>
                             {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">Aucune catégorie disponible.</li>
+                        {% endif %}
                         </ul>
                     </div>
                 </div>

@@ -7,6 +7,6 @@
         <h2>{{ post.title }}</h2>
         <p><small>Publié le {{ post.publishedDate|date('d/m/Y') }}</small></p>
         <p>{{ post.content }}</p>
-        <a href="{{ path('app_home') }}" class="btn btn-light">Retour à la liste</a>
+        <a href="{{ app.request.headers.get('referer') ?: path('app_home') }}" class="btn btn-light">Retour</a>
     </div>
 {% endblock %}
