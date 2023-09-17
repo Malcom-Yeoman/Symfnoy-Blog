@@ -27,11 +27,13 @@ class AppFixtures extends Fixture
         for ($i = 1; $i <= 20; $i++) {
             $post = new Post();
             $post->setTitle($faker->sentence);
-            $post->setContent($faker->paragraph(5, true));
+            $post->setContent($faker->paragraph(15, true));
             $post->setCategory($categories[rand(0, 4)]); // Associate with a random category
             $post->setPublishedDate($faker->dateTimeThisYear);
+            $post->setImage("https://picsum.photos/800/400"); // Set a placeholder image URL for now
             $manager->persist($post);
         }
+        
 
         $manager->flush();
     }
