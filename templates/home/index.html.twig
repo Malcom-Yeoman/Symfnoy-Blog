@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Symfony-Blog | Accueil{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Blog -->
+        <div class="col-md-8">
+            <h2>Posts</h2>
+            
+            {% for post in posts %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.content|slice(0, 150) ~ '...' }}</p>
+                    <a href="#" class="btn btn-primary">Lire la suite</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Publié le {{ post.PublishedDate|date('d/m/Y') }} 
+                </div>
+            </div>
+            {% else %}
+            <p>Aucun post disponible pour le moment.</p>
+            {% endfor %}
+            
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <h4>Filtres</h4>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Catégories</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for category in categories %}
+                        <li class="list-group-item">
+                            <a href="#">{{ category.name }}</a>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item">Aucune catégorie disponible.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Recherche</h5>
+                    <form action="" method="get">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="query" placeholder="Rechercher...">
+                            <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
