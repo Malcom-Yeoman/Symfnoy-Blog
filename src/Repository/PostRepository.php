@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Post>
@@ -19,15 +20,6 @@ class PostRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Post::class);
-    }
-
-    // Return all post order by date
-    public function findAllOrderedByDate()
-    {
-        return $this->createQueryBuilder('p')
-            ->orderBy('p.published_date', 'DESC')
-            ->getQuery()
-            ->getResult();
     }
 
 //    /**

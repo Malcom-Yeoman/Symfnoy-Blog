@@ -1,0 +1,63 @@
+{% if pageCount > 1 %}
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if previous is defined %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path('app_home', { page: previous }) }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
+            {% endif %}
+            
+            {# Always show the first page #}
+            <li class="page-item{% if current == 1 %} active{% endif %}">
+                <a class="page-link" href="{{ path('app_home', { page: 1 }) }}">1</a>
+            </li>
+
+            {# Ellipsis after the first page if needed #}
+            {% if current > 3 %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            {% endif %}
+            
+            {# Show current page and 1 page before and after if they exist #}
+            {% for offset in -1..1 %}
+                {% set page = current + offset %}
+                {% if page > 1 and page < pageCount %}
+                    <li class="page-item{% if page == current %} active{% endif %}">
+                        <a class="page-link" href="{{ path('app_home', { page: page }) }}">{{ page }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            
+            {# Ellipsis before the last page if needed #}
+            {% if current < pageCount - 2 %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            {% endif %}
+
+            {# Always show the last page #}
+            <li class="page-item{% if current == pageCount %} active{% endif %}">
+                <a class="page-link" href="{{ path('app_home', { page: pageCount }) }}">{{ pageCount }}</a>
+            </li>
+
+            {% if next is defined %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path('app_home', { page: next }) }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
