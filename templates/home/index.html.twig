@@ -16,7 +16,7 @@
                         <small class="text-muted">Catégorie: {{ post.category.name }}</small>
                         <br><br>
                         <p class="card-text">{{ post.content|slice(0, 150) ~ '...' }}</p>
-                        <a href="#" class="btn btn-light">Lire la suite</a>
+                        <a href="{{ path('app_show_post', {'id': post.id}) }}" class="btn btn-light">Lire la suite</a>
                     </div>
                     <div class="card-footer text-muted">
                         Publié le {{ post.PublishedDate|date('d/m/Y') }} 

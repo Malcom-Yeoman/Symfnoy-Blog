@@ -33,4 +33,18 @@ class HomeController extends AbstractController
             'categories' => $categories
         ]);
     }
+
+    #[Route('/post/{id}', name: 'app_show_post')]
+    public function show(int $id, PostRepository $postRepository): Response
+    {
+        $post = $postRepository->find($id);
+
+        if (!$post) {
+            throw $this->createNotFoundException('L\'article demandé n\'existe pas.');
+        }
+
+        return $this->render('home/show.html.twig', [
+            'post' => $post,
+        ]);
+    }
 }
