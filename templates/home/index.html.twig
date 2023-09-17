@@ -35,8 +35,8 @@
                         <ul class="list-group list-group-flush">
                         {% if categories|length > 0 %}
                             {% for category in categories %}
-                                <li class="list-group-item">
-                                    <a href="{{ path('app_home', {'category': category.id}) }}">{{ category.name }}</a>
+                                <li class="list-group-item {{ category.id == selectedCategory ? 'list-group-item-dark' : '' }}">
+                                    <a href="{{ path('app_home', {'category': category.id}) }}" class="link-secondary">{{ category.name }}</a>
                                 </li>
                             {% endfor %}
                         {% else %}
