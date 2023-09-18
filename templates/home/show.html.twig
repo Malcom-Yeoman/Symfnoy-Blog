@@ -21,12 +21,17 @@
         <h3 class="mt-5">Commentaires:</h3>
         {% if post.comments|length %}
             <ul class="list-unstyled">
-                {% for comment in post.comments %}
-                    <li class="mb-3 border-bottom pb-3">
-                        <strong>{{ comment.user.username }}</strong> <small class="text-muted">{{ comment.createdAt|date('d/m/Y') }}</small>
-                        <p>{{ comment.content }}</p>
-                    </li>
-                {% endfor %}
+            {% for comment in post.comments %}
+                <li class="mb-3 border-bottom pb-3">
+                    <strong>{{ comment.user.username }}</strong>
+                    {# Check if user has ROLE_ADMIN and display badge #}
+                    {% if 'ROLE_ADMIN' in comment.user.roles %}
+                        <span class="badge bg-danger">Admin</span>
+                    {% endif %}
+                    <small class="text-muted">{{ comment.createdAt|date('d/m/Y') }}</small>
+                    <p>{{ comment.content }}</p>
+                </li>
+            {% endfor %}
             </ul>
         {% else %}
             <p>Aucun commentaire pour le moment. Soyez le premier à commenter!</p>
