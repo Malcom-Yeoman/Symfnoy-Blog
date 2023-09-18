@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
+use App\Form\CommentType;
 use App\Repository\PostRepository;
 use App\Repository\CategoryRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -49,19 +52,42 @@ class HomeController extends AbstractController
     }    
 
     #[Route('/post/{id}', name: 'app_show_post')]
-    public function show(int $id, PostRepository $postRepository): Response
+    public function show(int $id, PostRepository $postRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         // Find the post by its ID
         $post = $postRepository->find($id);
-
+    
         // If the post is not found, throw a not found exception
         if (!$post) {
             throw $this->createNotFoundException('The requested post does not exist.');
         }
-
+    
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted()) {
+            if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
+                return $this->redirectToRoute('app_login');
+            }
+            
+            if ($form->isValid()) {
+                $comment->setPost($post);
+                $comment->setUser($this->getUser()); 
+                $comment->setCreatedAt(new \DateTime());
+    
+                $entityManager->persist($comment);
+                $entityManager->flush();
+    
+                return $this->redirectToRoute('app_show_post', ['id' => $post->getId()]);
+            }
+        }
+    
         // Render the post details view
         return $this->render('home/show.html.twig', [
             'post' => $post,
+            'commentForm' => $form->createView()
         ]);
-    }
+    }    
 }

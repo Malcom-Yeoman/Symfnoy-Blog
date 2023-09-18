@@ -9,6 +9,27 @@
         <p><small class="text-muted">Catégorie: {{ post.category.name }}</small></p>
         <img src="{{ post.image }}" alt="{{ post.title }}" class="img-fluid mb-3">
         <p>{{ post.content }}</p>
-        <a href="{{ app.request.headers.get('referer') ?: path('app_home') }}" class="btn btn-light">Retour</a>
+        <a href="{{ app.request.headers.get('referer') ?: path('app_home') }}" class="btn btn-light mt-3">Retour</a>
+
+        <h4 class="mt-4">Laisser un commentaire:</h4>
+        {{ form_start(commentForm) }}
+        {{ form_widget(commentForm.content) }}
+        <button type="submit" class="btn btn-light mt-2">Envoyer</button>
+        {{ form_end(commentForm) }}
+
+        {# Comments section starts here #}
+        <h3 class="mt-5">Commentaires:</h3>
+        {% if post.comments|length %}
+            <ul class="list-unstyled">
+                {% for comment in post.comments %}
+                    <li class="mb-3 border-bottom pb-3">
+                        <strong>{{ comment.user.username }}</strong> <small class="text-muted">{{ comment.createdAt|date('d/m/Y') }}</small>
+                        <p>{{ comment.content }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aucun commentaire pour le moment. Soyez le premier à commenter!</p>
+        {% endif %}
     </div>
 {% endblock %}

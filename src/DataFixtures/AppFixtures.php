@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Post;
 use App\Entity\Category;
 use App\Entity\User;
+use App\Entity\Comment;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -74,17 +75,22 @@ class AppFixtures extends Fixture
             $categoriesEntities[] = $category;
         }
 
+        $posts = [];  // To store Post objects for commenting later
         // Create posts
         for ($i = 1; $i <= 20 && $i <= count($titles); $i++) {
             $post = new Post();
-            $post->setTitle($titles[$i-1]);  // Assign from the shuffled titles
+            $post->setTitle($titles[$i-1]);
             $post->setContent($faker->paragraphs($faker->numberBetween(3, 7), true));
             $post->setCategory($faker->randomElement($categoriesEntities));
             $post->setPublishedDate($faker->dateTimeBetween('-1 years', 'now'));
             $post->setImage("https://picsum.photos/800/400?random={$i}");  
+
             $manager->persist($post);
+            $posts[] = $post;  // Store the post
         }
 
+        $users = [];  // To store User objects for commenting later
+        // Create users
         foreach ($usersData as $data) {
             $user = new User();
             $user->setEmail($data[0]);
@@ -93,6 +99,20 @@ class AppFixtures extends Fixture
             $user->setRoles($data[3]);
 
             $manager->persist($user);
+            $users[] = $user;  // Store the user
+        }
+
+        // Add comments to posts
+        foreach ($posts as $post) {
+            for ($j = 0; $j < rand(1, 5); $j++) {
+                $comment = new Comment();
+                $comment->setContent($faker->sentence());
+                $comment->setCreatedAt($faker->dateTimeBetween('-1 years', 'now'));
+                $comment->setPost($post);
+                $comment->setUser($faker->randomElement($users));
+                
+                $manager->persist($comment);
+            }
         }
 
         $manager->flush();
