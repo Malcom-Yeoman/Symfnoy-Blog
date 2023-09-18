@@ -2,10 +2,11 @@
 
 namespace App\DataFixtures;
 
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use App\Entity\Post;
 use App\Entity\Category;
+use App\Entity\User;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 
 class AppFixtures extends Fixture
@@ -16,13 +17,6 @@ class AppFixtures extends Fixture
 
         // Create categories
         $categories = ['Technologie', 'Santé', 'Voyage', 'Education', 'Sports'];
-        
-        foreach ($categories as $categoryName) {
-            $category = new Category();
-            $category->setName($categoryName);
-            $manager->persist($category);
-            $categoriesEntities[] = $category;
-        }
 
         // Predefined list of realistic titles
         $titles = [
@@ -57,8 +51,28 @@ class AppFixtures extends Fixture
             "La montée des économies émergentes : focus sur le Brésil, l'Inde et la Chine.",
             "Comment les podcasts ont révolutionné le monde de la narration.",
         ];
-
+        
         shuffle($titles); // Mix the titles
+
+        // Encoded password string
+        $encodedPassword = '$2y$10$1BbZWvD5Dw1AvJn4vllkb.tbmC9qg7.oFUOR/0coQOXmwBOnMRIKa';
+
+        // Create Users
+        $usersData = [
+            ['john.doe@example.com', 'JohnDoe', $encodedPassword, []],
+            ['jane.doe@example.com', 'JaneDoe', $encodedPassword, []],
+            ['alice.smith@example.com', 'AliceSmith', $encodedPassword, []],
+            ['bob.jones@example.com', 'BobJones', $encodedPassword, []],
+            ['carol.wilson@example.com', 'CarolWilson', $encodedPassword, []],
+            ['admin@example.com', 'Admin', $encodedPassword, ['ROLE_ADMIN']],
+        ];
+
+        foreach ($categories as $categoryName) {
+            $category = new Category();
+            $category->setName($categoryName);
+            $manager->persist($category);
+            $categoriesEntities[] = $category;
+        }
 
         // Create posts
         for ($i = 1; $i <= 20 && $i <= count($titles); $i++) {
@@ -69,6 +83,16 @@ class AppFixtures extends Fixture
             $post->setPublishedDate($faker->dateTimeBetween('-1 years', 'now'));
             $post->setImage("https://picsum.photos/800/400?random={$i}");  
             $manager->persist($post);
+        }
+
+        foreach ($usersData as $data) {
+            $user = new User();
+            $user->setEmail($data[0]);
+            $user->setUsername($data[1]);
+            $user->setPassword($data[2]);
+            $user->setRoles($data[3]);
+
+            $manager->persist($user);
         }
 
         $manager->flush();
